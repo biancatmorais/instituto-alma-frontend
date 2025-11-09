@@ -14,7 +14,7 @@ function RelatoriosPage() {
     setIsLoading(true);
     try {
       // Chama a rota PÚBLICA de documentos
-      const response = await fetch('http://localhost:4000/api/documentos');
+      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/documentos');
       if (!response.ok) throw new Error('Falha ao buscar documentos.');
       
       const data = await response.json();
@@ -46,7 +46,7 @@ function RelatoriosPage() {
     }
 
     // A URL base do nosso back-end para os ficheiros
-    const fileBaseUrl = 'http://localhost:4000/uploads/';
+    const fileBaseUrl = 'https://instituto-alma-backend-production.up.railway.app/uploads/';
 
     // Mapeia os dados do banco para os itens da lista
     return documentos.map((doc) => (

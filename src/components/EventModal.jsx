@@ -16,7 +16,7 @@ function EventModal({ onClose }) {
 
     try {
       // 1. Chamar a nossa nova API de inscrições
-      const response = await fetch('http://localhost:4000/api/inscricoes', {
+      const response = await fetch('https://instituto-alma-backend-production.up.railway.app', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

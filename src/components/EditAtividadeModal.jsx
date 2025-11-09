@@ -29,7 +29,7 @@ function EditAtividadeModal({ atividadeId, onClose, onSave }) {
     const fetchAtividade = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`http://localhost:4000/api/atividades/${atividadeId}`);
+        const response = await fetch(`https://instituto-alma-backend-production.up.railway.app/${atividadeId}`);
         if (!response.ok) throw new Error('Falha ao buscar dados da atividade.');
         
         const data = await response.json();
@@ -73,7 +73,7 @@ function EditAtividadeModal({ atividadeId, onClose, onSave }) {
 
     try {
       // Chama a rota PUT
-      const response = await fetch(`http://localhost:4000/api/atividades/${atividadeId}`, {
+      const response = await fetch(`https://instituto-alma-backend-production.up.railway.app/${atividadeId}`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData

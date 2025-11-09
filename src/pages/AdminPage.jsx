@@ -75,7 +75,7 @@ function AdminPage() {
     setIsLoadingMensagens(true);
     try {
       if (!token) throw new Error('Acesso negado.');
-      const response = await fetch('http://localhost:4000/api/ouvidoria', { headers: { 'Authorization': `Bearer ${token}` }});
+      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/ouvidoria', { headers: { 'Authorization': `Bearer ${token}` }});
       if (!response.ok) throw new Error((await response.json()).message);
       setMensagens(await response.json());
       setErrorMensagens(null);
@@ -86,7 +86,7 @@ function AdminPage() {
   const fetchEventos = useCallback(async () => {
     setIsLoadingEventos(true);
     try {
-      const response = await fetch('http://localhost:4000/api/eventos');
+      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/eventos');
       if (!response.ok) throw new Error('Falha ao buscar eventos');
       setEventos(await response.json());
       setErrorEventos(null);
@@ -97,7 +97,7 @@ function AdminPage() {
   const fetchAtividades = useCallback(async () => {
     setIsLoadingAtividades(true);
     try {
-      const response = await fetch('http://localhost:4000/api/atividades');
+      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/atividades');
       if (!response.ok) throw new Error('Falha ao buscar atividades');
       setAtividades(await response.json());
       setErrorAtividades(null);
@@ -108,7 +108,7 @@ function AdminPage() {
   const fetchDocumentos = useCallback(async () => {
     setIsLoadingDocumentos(true);
     try {
-      const response = await fetch('http://localhost:4000/api/documentos');
+      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/documentos');
       if (!response.ok) throw new Error('Falha ao buscar documentos');
       setDocumentos(await response.json());
       setErrorDocumentos(null);
@@ -119,7 +119,7 @@ function AdminPage() {
   const fetchMetas = useCallback(async () => {
     setIsLoadingMetas(true);
     try {
-      const response = await fetch('http://localhost:4000/api/metas');
+      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/metas');
       if (!response.ok) throw new Error('Falha ao buscar metas');
       setMetas(await response.json());
       setErrorMetas(null);
@@ -131,7 +131,7 @@ function AdminPage() {
     setIsLoadingInscricoes(true);
     try {
       if (!token) throw new Error('Acesso negado.');
-      const response = await fetch('http://localhost:4000/api/inscricoes', { headers: { 'Authorization': `Bearer ${token}` }});
+      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/inscricoes', { headers: { 'Authorization': `Bearer ${token}` }});
       if (!response.ok) throw new Error((await response.json()).message);
       setInscricoes(await response.json());
       setErrorInscricoes(null);
@@ -240,7 +240,7 @@ function AdminPage() {
       <tr key={doc.id}>
         <td>{doc.titulo}</td>
         <td>
-          <a href={`http://localhost:4000/uploads/${doc.arquivo_url}`} target="_blank" rel="noopener noreferrer">
+          <a href={`https://instituto-alma-backend-production.up.railway.app/uploads/${doc.arquivo_url}`} target="_blank" rel="noopener noreferrer">
             Ver PDF
           </a>
         </td>

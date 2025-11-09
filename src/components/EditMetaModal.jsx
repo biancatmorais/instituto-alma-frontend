@@ -23,7 +23,7 @@ function EditMetaModal({ metaId, onClose, onSave }) {
     const fetchMeta = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`http://localhost:4000/api/metas/${metaId}`);
+        const response = await fetch(`https://instituto-alma-backend-production.up.railway.app/${metaId}`);
         if (!response.ok) throw new Error('Falha ao buscar dados da meta.');
         
         const data = await response.json();
@@ -51,7 +51,7 @@ function EditMetaModal({ metaId, onClose, onSave }) {
 
     try {
       // Chama a rota PUT
-      const response = await fetch(`http://localhost:4000/api/metas/${metaId}`, {
+      const response = await fetch(`https://instituto-alma-backend-production.up.railway.app/api/metas/${metaId}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json', // Desta vez é JSON, não FormData

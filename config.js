@@ -1,1 +1,2 @@
-export const API_BASE_URL = process.env.VITE_API_URL || process.env.REACT_APP_API_URL || 'http://localhost:4000';
+/* global process */
+export const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://instituto-alma-backend-production.up.railway.app/api/atividades';

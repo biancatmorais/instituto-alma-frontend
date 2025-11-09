@@ -40,7 +40,7 @@ function HomePage() {
   const fetchEventos = useCallback(async () => {
     setIsLoadingEventos(true);
     try {
-      const response = await fetch('http://localhost:4000/api/eventos'); 
+      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/eventos'); 
       if (!response.ok) throw new Error('Falha ao buscar eventos do servidor');
       const data = await response.json();
       setEventos(data); 
@@ -55,7 +55,7 @@ function HomePage() {
   const fetchAtividades = useCallback(async () => {
     setIsLoadingAtividades(true);
     try {
-      const response = await fetch('http://localhost:4000/api/atividades'); 
+      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/atividades'); 
       if (!response.ok) throw new Error('Falha ao buscar atividades');
       const data = await response.json();
       setAtividades(data); // Salva as atividades no estado
@@ -104,7 +104,7 @@ function HomePage() {
       );
     }
 
-    const imageBaseUrl = 'http://localhost:4000/uploads/';
+    const imageBaseUrl = 'https://instituto-alma-backend-production.up.railway.app/uploads/';
 
     // Mapeia os dados do banco de dados para os slides
     return atividades.map((atividade, index) => (
@@ -206,7 +206,7 @@ function HomePage() {
       mensagem: ouvidoriaMensagem
     };
     try {
-      const response = await fetch('http://localhost:4000/api/ouvidoria', {
+      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/ouvidoria', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
