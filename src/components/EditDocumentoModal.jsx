@@ -26,7 +26,7 @@ function EditDocumentoModal({ documentoId, onClose, onSave }) {
       setIsLoading(true);
       try {
         // Busca os dados do documento específico
-        const response = await fetch(`https://instituto-alma-backend-production.up.railway.app/api/documentos/${documentoId}`);
+        const response = await fetch(`http://localhost:4000/api/documentos/${documentoId}`);
         if (!response.ok) throw new Error('Falha ao buscar dados do documento.');
         
         const data = await response.json();
@@ -62,7 +62,7 @@ function EditDocumentoModal({ documentoId, onClose, onSave }) {
 
     try {
       // Chama a rota PUT
-      const response = await fetch(`https://instituto-alma-backend-production.up.railway.app/api/documentos/${documentoId}`, {
+      const response = await fetch(`http://localhost:4000/api/documentos/${documentoId}`, {
         method: 'PUT',
         headers: { 
           // NÃO defina 'Content-Type', o FormData faz isso

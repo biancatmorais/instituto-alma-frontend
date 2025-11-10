@@ -2,29 +2,35 @@ import React, { useState } from 'react';
 
 // 'onClose' é uma função que receberemos da HomePage
 function EventModal({ onClose }) {
+  // --- ESTADOS (Obrigatórios para o formulário) ---
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [isEnviado, setIsEnviado] = useState(false);
-  
-  // (NOVO) Estado para mensagens de erro/sucesso da API
   const [formMessage, setFormMessage] = useState('');
 
   // --- (ATUALIZADO) AGORA CHAMA A API REAL ---
   const handleSubmit = async (e) => {
     e.preventDefault(); 
-    setFormMessage(''); // Limpa mensagens antigas
+    setFormMessage('');
 
     try {
-      // 1. Chamar a nossa nova API de inscrições
-      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/', {
+      const response = await fetch('http://localhost:4000/api/inscricoes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ nome, email }),
       });
-
-      const data = await response.json();
+      
+      // Tenta ler o corpo JSON, mas não falha se estiver vazio
+      let data = {};
+      try {
+          data = await response.json();
+      } catch (jsonError) {
+          // Se falhar a leitura (porque o corpo está vazio), 
+          // usaremos uma mensagem padrão se o status for 2xx.
+          data.message = 'Inscrição realizada com sucesso! Avisaremos sobre novos eventos.';
+      }
 
       if (!response.ok) {
         // Se a API der um erro (ex: 400, 409, 500)
@@ -33,7 +39,12 @@ function EventModal({ onClose }) {
 
       // 2. SUCESSO!
       setIsEnviado(true);
-      setFormMessage(data.message); // "Inscrição realizada com sucesso!"
+      // Usa a mensagem lida ou a mensagem padrão de sucesso.
+      setFormMessage(data.message); 
+
+      // Limpa os campos após o sucesso
+      setNome('');
+      setEmail('');
 
       // Fecha o modal após 3 segundos
       setTimeout(() => {
@@ -42,12 +53,13 @@ function EventModal({ onClose }) {
 
     } catch (error) {
       console.error('Erro no formulário do modal:', error);
-      // Mostra o erro (ex: "Este email já está cadastrado")
+      // Mostra o erro 
       setFormMessage(error.message);
-      setIsEnviado(true); // Mostra a mensagem de erro no lugar do sucesso
+      setIsEnviado(true); 
     }
   };
-
+  
+  // --- JSX (O que aparece na tela) ---
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>

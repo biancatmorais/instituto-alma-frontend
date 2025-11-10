@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-// Este modal recebe:
-// - atividadeId: O ID da atividade a ser editada
-// - onClose: A função para fechar o modal
-// - onSave: A função para atualizar a lista na AdminPage
+// Componente para editar uma atividade específica
 function EditAtividadeModal({ atividadeId, onClose, onSave }) {
-  const { token } = useAuth();
+  const { token } = useAuth(); // O token é necessário para o GET e PUT
   
   // Estados do formulário
   const [titulo, setTitulo] = useState('');
@@ -21,22 +18,48 @@ function EditAtividadeModal({ atividadeId, onClose, onSave }) {
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
   
-  // Imagens antigas (apenas para mostrar o nome)
+  // Imagens antigas (apenas para mostrar o nome/URL)
   const [oldImages, setOldImages] = useState({});
 
-  // 1. Buscar os dados da atividade quando o modal abre
+  // 1. Buscar os dados da atividade quando o modal abre (GET)
   useEffect(() => {
     const fetchAtividade = async () => {
       setIsLoading(true);
+      setFormError(''); 
+      
+      if (!token) {
+        setFormError('Erro de autenticação: Token não disponível.');
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        const response = await fetch(`https://instituto-alma-backend-production.up.railway.app/api/${atividadeId}`);
-        if (!response.ok) throw new Error('Falha ao buscar dados da atividade.');
+        // Correção de sintaxe e URL
+        const response = await fetch(`http://localhost:4000/api/atividades/${atividadeId}`, {
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          }
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text(); 
+          let errorMessage = `Falha ao buscar dados. Status: ${response.status}.`;
+          
+          try {
+            const errorJson = JSON.parse(errorText);
+            errorMessage = errorJson.message || errorMessage;
+          } catch (e) {
+            // Se não for JSON, usamos o status.
+          }
+          // REMOVIDA A CHAVE EXTRA (linha 52 original)
+          throw new Error(errorMessage);
+        }
         
         const data = await response.json();
         // Preenche o formulário com os dados do banco
         setTitulo(data.titulo);
         setDescricao(data.descricao);
-        // Guarda os nomes dos ficheiros antigos
+        // Guarda os nomes dos ficheiros antigos (as URLs já vêm do Controller)
         setOldImages({
           img1: data.imagem_url_1,
           img2: data.imagem_url_2,
@@ -45,21 +68,29 @@ function EditAtividadeModal({ atividadeId, onClose, onSave }) {
         });
         
       } catch (err) {
-        setFormError(err.message);
+        setFormError(err.message); 
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchAtividade();
-  }, [atividadeId]);
+    if(atividadeId && token) { 
+      fetchAtividade();
+    }
+  }, [atividadeId, token]);
 
 
-  // 2. Função para enviar a ATUALIZAÇÃO
+  // 2. Função para enviar a ATUALIZAÇÃO (PUT)
   const handleUpdateAtividade = async (e) => {
     e.preventDefault();
     setFormError('');
     setFormSuccess('');
+    
+    // Verifica se o token existe antes de enviar
+    if (!token) {
+        setFormError('Sessão expirada. Por favor, faça login novamente.');
+        return;
+    }
 
     const formData = new FormData();
     formData.append('titulo', titulo);
@@ -72,23 +103,19 @@ function EditAtividadeModal({ atividadeId, onClose, onSave }) {
     if (imagem4) formData.append('imagem_4', imagem4);
 
     try {
-      // Chama a rota PUT
-      const response = await fetch(`https://instituto-alma-backend-production.up.railway.app/api/${atividadeId}`, {
+      // Corrigido: USANDO LOCALHOST E CRASES
+      const response = await fetch(`http://localhost:4000/api/atividades/${atividadeId}`, {
         method: 'PUT',
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: { 'Authorization': `Bearer ${token}` }, // Headers para autenticação
         body: formData
       });
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Erro ao atualizar atividade');
 
-      setFormSuccess(data.message); // "Atividade atualizada com sucesso."
-      
-      // Chama a função 'onSave' (que veio da AdminPage)
-      // para atualizar a tabela "Atividades Atuais"
+      setFormSuccess(data.message); 
       onSave(); 
       
-      // Fecha o modal após 2 segundos
       setTimeout(() => {
         onClose();
       }, 2000);

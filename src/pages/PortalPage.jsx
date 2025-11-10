@@ -27,7 +27,7 @@ function PortalPage() {
 
     try {
       // 3. Chamar a API de Login no back-end
-      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/auth/login', {
+      const response = await fetch('http://localhost:4000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: loginEmail, senha: loginSenha })
@@ -60,7 +60,7 @@ function PortalPage() {
 
     try {
       // 8. Chamar a API de Registro no back-end
-      const response = await fetch('https://instituto-alma-backend-production.up.railway.app/api/auth/register', {
+      const response = await fetch('http://localhost:4000/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome: regNome, email: regEmail, senha: regSenha })

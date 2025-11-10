@@ -1,12 +1,10 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-// Importe os Headers
-import Header from './components/Header';
-import DashboardHeader from './components/DashboardHeader.jsx'; 
-import Footer from './components/Footer.jsx'; 
-// 1. IMPORTE O NOSSO NOVO "SEGURANÇA"
-import ProtectedRoute from './components/ProtectedRoute.jsx';
+// Importe os NOVOS Componentes de Layout que você criará
+// CORRIGIDO: Adicionando a extensão .jsx
+import PublicLayout from './components/PublicLayout.jsx'; 
+import ProtectedLayout from './components/ProtectedLayout.jsx'; 
 
 // Importe suas páginas
 import HomePage from './pages/HomePage';
@@ -19,47 +17,45 @@ import AdminPage from './pages/AdminPage';
 import VoluntarioPage from './pages/VoluntarioPage';
 
 function App() {
-  return (
-    <div>
-      <Routes>
-        {/* --- ROTAS PÚBLICAS --- */}
-        {/* (Qualquer um pode ver) */}
-        <Route path="/" element={<><Header /><HomePage /></>} />
-        <Route path="/portal" element={<><Header /><PortalPage /></>} />
-        <Route path="/doar" element={<><Header /><DoarPage /></>} />
-        <Route path="/relatorios" element={<><Header /><RelatoriosPage /></>} />
-        <Route path="/governanca" element={<><Header /><GovernancaPage /></>} />
+  return (
+    <Routes>
+        
+        {/* --- ROTAS PÚBLICAS: USAM O PublicLayout (Header + Footer) --- */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/portal" element={<PortalPage />} />
+          <Route path="/doar" element={<DoarPage />} />
+          <Route path="/relatorios" element={<RelatoriosPage />} />
+          <Route path="/governanca" element={<GovernancaPage />} />
+        </Route>
 
-        {/* --- ROTAS PRIVADAS (PROTEGIDAS) --- */}
-        
-        {/* ROTA DASHBOARD (Qualquer usuário logado pode ver) */}
-        <Route path="/dashboard" element={
-          <ProtectedRoute allowedRoles={['doador', 'voluntario', 'admin']}>
-            <DashboardHeader />
-            <DashboardPage />
-          </ProtectedRoute>
-        } />
+        {/* --- ROTAS PRIVADAS: USAM O ProtectedLayout (DashboardHeader + Footer) --- */}
+        
+        {/* ROTA DASHBOARD */}
+        <Route path="/dashboard" element={
+          <ProtectedLayout allowedRoles={['doador', 'voluntario', 'admin']}>
+            <DashboardPage />
+          </ProtectedLayout>
+        } />
 
-        {/* ROTA VOLUNTÁRIO (Apenas 'voluntario' e 'admin' podem ver) */}
-        <Route path="/voluntario" element={
-          <ProtectedRoute allowedRoles={['voluntario', 'admin']}>
-            <DashboardHeader />
-            <VoluntarioPage />
-          </ProtectedRoute>
-        } />
+        {/* ROTA VOLUNTÁRIO */}
+        <Route path="/voluntario" element={
+          <ProtectedLayout allowedRoles={['voluntario', 'admin']}>
+            <VoluntarioPage />
+          </ProtectedLayout>
+        } />
 
-        {/* ROTA ADMIN (Apenas 'admin' pode ver) */}
-        <Route path="/admin" element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <DashboardHeader />
-            <AdminPage />
-          </ProtectedRoute>
-        } />
-      </Routes>
-      
-      <Footer />
-    </div>
-  );
+        {/* ROTA ADMIN */}
+        <Route path="/admin" element={
+          <ProtectedLayout allowedRoles={['admin']}>
+            <AdminPage />
+          </ProtectedLayout>
+        } />
+        
+        {/* Adicione rotas 404/Not Found aqui */}
+        {/* <Route path="*" element={<NotFoundPage />} /> */}
+    </Routes>
+  );
 }
 
 export default App;
